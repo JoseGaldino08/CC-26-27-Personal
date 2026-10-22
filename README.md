@@ -5,7 +5,7 @@ Un pequeño productor no puede mantener servidores propios ni un equipo de datos
 
 
 
-Justificación NIST SP 800-145
+## Justificación NIST SP 800-145
 
 1. Autoservicio bajo demanda. El productor da de alta su explotación, sus parcelas y sus sensores por sí mismo, sin pedir ayuda a nadie ni esperar a que un técnico lo configure. Esto es clave para pequeños agricultores que no cuentan con personal informático.
 
@@ -19,7 +19,7 @@ Justificación NIST SP 800-145
 
 
 
-Mapeo de Actores NIST SP 500-292
+## Mapeo de Actores NIST SP 500-292
 
 Consumidor:	Productor/gestor de la explotación (consume AgroSense como SaaS). Equipo de desarrollo (consume IaaS/PaaS: cómputo, base de datos gestionada, broker, caché). Usa el servicio y paga por su uso. El equipo, además, elige y configura los recursos cloud
 Proveedor. Proveedor cloud público (AWS, Azure, GCP u otro) que ofrece la infraestructura. AgroSense, como proveedor del SaaS hacia el productor. Ofrece, opera y garantiza el servicio según el SLA. Gestiona el aislamiento entre inquilinos
@@ -28,7 +28,7 @@ Auditor: Entidad certificadora independiente (ISO 27001, ENS) y la autoridad de 
 Operador: (Carrier)	Operadores de telecomunicaciones que dan conectividad a los sensores (NB-IoT, LTE-M, 4G, LoRaWAN) y acceso a internet al productor. Proporciona la conectividad y el transporte entre consumidores y proveedor
 
 
-API Prevista
+## API Prevista
 
 | Método | Ruta | Descripción | Respuesta |
 |---|---|---|---|
@@ -38,8 +38,12 @@ API Prevista
 | `POST` | `/api/telemetria` | Enviar lecturas de sensores | `202` |
 | `GET` | `/api/parcelas/{id}/balance-hidrico` | Balance hídrico actual | `200` |
 | `GET` | `/api/parcelas/{id}/recomendacion` | Cuándo y cuánto regar | `200` |
-| `GET` | `/api/parcelas/{id}/riesgos` | Rsiesgo de helada y enfermedades | `200` |
 | `GET` | `/api/alertas` | Listar alertas recibidas | `200` |
 | `PUT` | `/api/preferencias-alertas` | Elegir canal y prioridad | `200` |
 | `GET` | `/api/parcelas/{id}/historial` | Histórico y consumo de agua | `200` |
 | `PUT` | `/api/cultivos/{id}/parametros` | Ajustar coeficientes y umbrales | `200` |
+
+
+## Diagrama de Arquitetura
+
+<img width="502" height="372" alt="diagrama" src="https://github.com/user-attachments/assets/0445a246-edd6-48c2-8b63-5b1241715f8f" />
