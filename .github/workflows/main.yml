@@ -7,19 +7,41 @@ on:
     branches: [ main ]
 
 jobs:
+
   build:
+    name: Ubuntu Version
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.14"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
 
-      uses: docker/setup-buildx-action@v2
-    
-    run: |
-      pip install ruff pytest
-      pip install -r services/farm-service/requirements.txt
-      pip install -r services/monitoring-service/requirements.txt
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install dependencies
+        run: |
+          pip install ruff pytest
+          pip install -r farm_service/requirements.txt
+          pip install -r telemetry_service/requirements.txt
+
+      - name: Install Python linter
+        run: pip install ruff
+
+      - name: Run Python linter
+        run: ruff check farm_service telemetry_service
+
+      - name: Check Dockerfiles
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: farm_service/Dockerfile      
+
+      - name: Check telemetry Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: telemetry_service/Dockerfile
