@@ -1,0 +1,66 @@
+
+services:
+  farm_service:
+    build:
+      context: ./farm_service
+      dockerfile: Dockerfile
+    container_name: agrosense_farm
+    ports:
+      - "8001:8001"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - agrosense_network
+    restart: unless-stopped
+
+  telemetry_service:
+    build:
+      context: ./telemetry_service
+      dockerfile: Dockerfile
+    container_name: agrosense_telemetry
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - agrosense_network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: agrosense_database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - agrosense_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  agrosense_network:
+    driver: bridge
+
+volumes:
+  postgres-data:
